@@ -9,6 +9,7 @@ public class MinHeap {
     private int capacity;
     private int size;
 
+
     public MinHeap(int capacity){
         this.capacity = capacity;
         //start from index 1
@@ -17,10 +18,19 @@ public class MinHeap {
     }
 
     /**
-     * construct from a array
+     * construct heap from array
      * @param array
      */
-    public MinHeap(int[] array){
+    public MinHeap(int[] array,int endIndex){
+        this(array.length);
+        //copy input array element
+        for(int i=0;i<=endIndex;i++){
+            this.nodes[++size] = array[i];
+        }
+
+        //build heap
+        buildHeap();
+
     }
 
     /**
@@ -91,8 +101,15 @@ public class MinHeap {
         return result;
     }
 
+    /**
+     * delete element in the index
+     * @param index
+     */
     public void deleteKey(int index){
-
+        //decrease element to the minimum integer value
+        decreaseKey(index,Integer.MIN_VALUE);
+        //use estractMin to delete
+        extractMin();
     }
 
     /**
@@ -120,6 +137,24 @@ public class MinHeap {
         if(small != index){
             swap(index,small);
             minHeapify(small);
+        }
+    }
+
+    /**
+     * check if the heap is full
+     * @return
+     */
+    public boolean isFull(){
+        return this.size == this.capacity;
+    }
+
+    /**
+     * build heap from array
+     */
+    private void  buildHeap(){
+        //do heapify from half size to 1
+        for(int i = this.size/2;i>=1;i--){
+            minHeapify(i);
         }
     }
 
@@ -167,6 +202,28 @@ public class MinHeap {
     private void swap(int index1,int index2){
         int temp = this.nodes[index1];
         this.nodes[index1] = this.nodes[index2];
-        this.nodes[index1] = temp;
+        this.nodes[index2] = temp;
+    }
+
+    /**
+     * return size of the heap
+     * @return
+     */
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("^ MinHeap\n");
+        sb.append("| Capacity: " + this.capacity + "\n");
+        sb.append("| size: " + this.size + "\n");
+        sb.append("$ value: [");
+        for (int i=1;i<this.size;i++){
+            sb.append(this.nodes[i]+",");
+        }
+        sb.append(this.nodes[this.size]+"]\n");
+        return sb.toString();
     }
 }
