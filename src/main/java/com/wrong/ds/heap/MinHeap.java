@@ -4,8 +4,8 @@ package com.wrong.ds.heap;
  * this class is an implementation of the Binary Heap
  * the min is located in the index of 1
  */
-public class MinHeap {
-    private int[] nodes;
+public class MinHeap<E> {
+    private Node<E>[] nodes;
     private int capacity;
     private int size;
 
@@ -13,15 +13,16 @@ public class MinHeap {
     public MinHeap(int capacity){
         this.capacity = capacity;
         //start from index 1
-        this.nodes = new int[this.capacity+1];
+        this.nodes = new Node[this.capacity+1];
         this.size = 0;
     }
 
     /**
      * construct heap from array
+     * use shadow copy
      * @param array
      */
-    public MinHeap(int[] array,int endIndex){
+    public MinHeap(Node<E>[] array,int endIndex){
         this(array.length);
         //copy input array element
         for(int i=0;i<=endIndex;i++){
@@ -37,7 +38,7 @@ public class MinHeap {
      * insert key into the min heap
      * @param key
      */
-    public void insertKey(int key){
+    public void insertKey(Node<E> key){
         //if the heap is full, throw an exception
         if(this.size == this.capacity){
             throw new RuntimeException("[MinHeap]: The MinHeap is Full");
@@ -48,7 +49,7 @@ public class MinHeap {
 
         //fix the min heap property
         int current = this.size;
-        while(current != 1 && this.nodes[parent(current)] > this.nodes[current]){
+        while(current != 1 && this.nodes[parent(current)].getKey() > this.nodes[current].getKey()){
             swap(parent(current),current);
             current = parent(current);
         }
@@ -59,21 +60,21 @@ public class MinHeap {
      * decrease value of key at index location
      * new value should smaller than
      * @param index
-     * @param newValue
+     * @param newKey
      */
-    public void decreaseKey(int index, int newValue){
+    public void decreaseKey(int index, int newKey){
         if(index > this.size || index <= 0){
             throw new RuntimeException("[MinHeap]: Index is out of Range");
         }
-        if(this.nodes[index] < newValue){
+        if(this.nodes[index].getKey() < newKey){
             throw new RuntimeException("[MinHeap]: value should be greater than existing value");
         }
 
-        this.nodes[index] = newValue;
+        this.nodes[index].setKey(newKey);
 
         //fix the min heap property
         int current = index;
-        while(current != 1 && this.nodes[parent(current)] > this.nodes[current]){
+        while(current != 1 && this.nodes[parent(current)].getKey() > this.nodes[current].getKey()){
             swap(parent(current),current);
             current = parent(current);
         }
@@ -84,10 +85,10 @@ public class MinHeap {
      * @return
      * If it is empty, return the maximum integer value
      */
-    public int extractMin(){
+    public Node<E> extractMin(){
         //if it is empty, return the maximum integer value
         if(this.size <= 0){
-            return Integer.MAX_VALUE;
+            return null;
         }
         //if it has one element
         if(this.size == 1){
@@ -95,7 +96,7 @@ public class MinHeap {
             return this.nodes[1];
         }
         // if it has more than one element
-        int result = this.nodes[1];
+        Node<E> result = this.nodes[1];
         this.nodes[1] = this.nodes[size--];
         minHeapify(1);
         return result;
@@ -126,11 +127,11 @@ public class MinHeap {
         int right = rightChild(index);
         int small = index;
 
-        if(left != -1 && this.nodes[left] < this.nodes[small]){
+        if(left != -1 && this.nodes[left].getKey() < this.nodes[small].getKey()){
             small = left;
         }
 
-        if(right != -1 && this.nodes[right] < this.nodes[small]){
+        if(right != -1 && this.nodes[right].getKey() < this.nodes[small].getKey()){
             small = right;
         }
 
@@ -200,7 +201,7 @@ public class MinHeap {
      * @return
      */
     private void swap(int index1,int index2){
-        int temp = this.nodes[index1];
+        Node<E> temp = this.nodes[index1];
         this.nodes[index1] = this.nodes[index2];
         this.nodes[index2] = temp;
     }
