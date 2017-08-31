@@ -219,12 +219,7 @@ public class MinHeap<E> {
         StringBuilder sb = new StringBuilder();
         sb.append("^ MinHeap\n");
         sb.append("| Capacity: " + this.capacity + "\n");
-        sb.append("| size: " + this.size + "\n");
-        sb.append("$ value: [");
-        for (int i=1;i<this.size;i++){
-            sb.append(this.nodes[i]+",");
-        }
-        sb.append(this.nodes[this.size]+"]\n");
+        sb.append("$ size: " + this.size + "\n");
         return sb.toString();
     }
 }
